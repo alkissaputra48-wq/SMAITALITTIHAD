@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Students collection: Master student records
+    match /students/{studentId} {
+      allow get: if isValidId(studentId);
+      allow list: if true;
+      allow create, update, delete: if isValidId(studentId);
+    }
+
+    // Attendance records collection: Real-time presence logs
+    match /attendance/{recordId} {
+      allow get: if isValidId(recordId);
+      allow list: if true;
+      allow create, update, delete: if isValidId(recordId);
+    }
+
+    // Categories collection: Session schedules (Pagi, Dzuhur, Ashar, Ekskul)
+    match /categories/{categoryId} {
+      allow get: if isValidId(categoryId);
+      allow list: if true;
+      allow create, update, delete: if isValidId(categoryId);
+    }
+
+    // Settings collection: Kop surat, school identity, system configuration
+    match /settings/{settingId} {
+      allow get: if isValidId(settingId);
+      allow list: if true;
+      allow create, update, delete: if isValidId(settingId);
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
